@@ -52,7 +52,7 @@ public class Balsa {
         }
     }
 
-    public void limpiarBalsa() {
+    public void vaciarBalsa() {
         personasRescatadas.clear();
     }
 
