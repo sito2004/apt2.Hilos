@@ -2,50 +2,62 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Balsa {
-    private String nombre;
     private int capacidad;
-    private double tiempo;
-    private List<Pasajero> pasajerosRescatados;
+    private int tiempo;
+    private List<Persona> personasRescatadas;
+    private String nombre;
 
-    public Balsa(String nombre, int capacidad, double tiempo) {
+    public Balsa(String nombre, int capacidad, int tiempo) {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.tiempo = tiempo;
-        this.pasajerosRescatados = new ArrayList<>();
-    }
-
-    public int getCapacidad() {
-        return capacidad;
-    }
-
-    public double getTiempo() {
-        return tiempo;
+        this.personasRescatadas = new ArrayList<>();
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public List<Pasajero> getPasajerosRescatados() {
-        return pasajerosRescatados;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getCapacidad() {
+        return capacidad;
+    }
+
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public int getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(int tiempo) {
+        this.tiempo = tiempo;
+    }
+
+    public List<Persona> getPersonasRescatadas() {
+        return personasRescatadas;
     }
 
     public boolean estaLlena() {
-        return pasajerosRescatados.size() >= capacidad;
+        return personasRescatadas.size() >= capacidad;
     }
 
-    public void agregarPasajero(Pasajero pasajero) {
+    public void agregarPersona(Persona persona) {
         if (!estaLlena()) {
-            pasajerosRescatados.add(pasajero);
+            personasRescatadas.add(persona);
         }
     }
 
-    public void vaciarBalsa() {
-        pasajerosRescatados.clear();
+    public void limpiarBalsa() {
+        personasRescatadas.clear();
     }
 
     @Override
     public String toString() {
-        return "Balsa " + nombre + " - Capacidad: " + capacidad + " - Tiempo: " + tiempo + "s";
+        return "Balsa " + nombre + " (" + personasRescatadas.size() + "/" + capacidad + ")";
     }
 }
