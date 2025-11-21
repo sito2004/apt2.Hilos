@@ -58,6 +58,6 @@ public class Balsa {
 
     @Override
     public String toString() {
-        return "Balsa " + nombre + " (" + personasRescatadas.size() + "/" + capacidad + ")";
+        return " Balsa " + nombre + " (" + personasRescatadas.size() + "/" + capacidad + ")";
     }
 }
