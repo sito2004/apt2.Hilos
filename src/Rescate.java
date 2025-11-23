@@ -64,7 +64,7 @@ public class Rescate extends Thread {
             System.out.println("\t" + p + " rescatado en " + balsa.getNombre());
             balsa.bajarPasajeroBalsa(p);
         }
-        System.out.println("----- Fin desembarque de " + balsa.getNombre() + " -----");
+        System.out.println("------ Fin desembarque de " + balsa.getNombre() + " ------");
     }
 
     private void volviendoABarco() {
