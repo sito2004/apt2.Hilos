@@ -1,26 +1,19 @@
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
-
-// Clase Main
 public class Main {
-    public static void main(String[] args) {
-        // Crear pasajeros
-        List<Pasajero> pasajeros = new ArrayList<>();
+    public static void main(String[] args) throws InterruptedException {
+        List<Pasajero> listaPasajeros = new ArrayList<>();
         int id = 1;
 
-        // Ejemplo de distribución
-        for (int i = 0; i < 100; i++) pasajeros.add(new Pasajero(id++,
-                1)); // Niños
-        for (int i = 0; i < 100; i++) pasajeros.add(new Pasajero(id++,
-                2)); // Adultos
-        for (int i = 0; i < 100; i++) pasajeros.add(new Pasajero(id++,
-                3)); // Ancianos
-        for (int i = 0; i < 52; i++) pasajeros.add(new Pasajero(id++,
-                4)); // Tripulación
+        // Generar 352 pasajeros (o los que necesites)
+        for (int i = 0; i < 100; i++) listaPasajeros.add(new Pasajero(id++, 1));
+        for (int i = 0; i < 100; i++) listaPasajeros.add(new Pasajero(id++, 2));
+        for (int i = 0; i < 100; i++) listaPasajeros.add(new Pasajero(id++, 3));
+        for (int i = 0; i < 52; i++) listaPasajeros.add(new Pasajero(id++, 4));
 
-        Barco barco = new Barco(pasajeros);
+        Barco barco = new Barco(listaPasajeros);
 
-        // Crear balsas
         Balsa[] balsas = {
                 new Balsa("Acasta", 1, 0.5),
                 new Balsa("Banff", 2, 1),
@@ -29,9 +22,18 @@ public class Main {
                 new Balsa("Expedición", 5, 8)
         };
 
-        // Crear y arrancar hilos
-        for (Balsa b : balsas) {
-            new Thread(new Rescate(b, barco)).start();
+        // Crear y arrancar los hilos de rescate
+        Rescate[] rescates = new Rescate[balsas.length];
+        for (int i = 0; i < balsas.length; i++) {
+            rescates[i] = new Rescate(barco, balsas[i]);
+            rescates[i].start();
         }
+
+        // Esperar a que acaben todos
+        for (Rescate r : rescates) {
+            r.join();
+        }
+
+        System.out.println("RESCATE FINALIZADO");
     }
 }
