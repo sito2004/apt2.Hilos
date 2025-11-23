@@ -2,62 +2,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Balsa {
-    private int capacidad;
-    private int tiempo;
-    private List<Persona> personasRescatadas;
-    private String nombre;
+    private final String nombre;
+    private final int capacidad;
+    private final double tiempo; // en segundos
+    private final List<Pasajero> pasajeros;
 
-    public Balsa(String nombre, int capacidad, int tiempo) {
+    public Balsa(String nombre, int capacidad, double tiempo) {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.tiempo = tiempo;
-        this.personasRescatadas = new ArrayList<>();
+        this.pasajeros = new ArrayList<>();
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public int getCapacidad() {
         return capacidad;
     }
 
-    public void setCapacidad(int capacidad) {
-        this.capacidad = capacidad;
+    public double getTiempo() {
+        return tiempo * 1000; // convertir a ms para sleep
     }
 
-    public int getTiempo() {
-        return tiempo;
+    public synchronized void subirPasajeroBalsa(Pasajero p) {
+        pasajeros.add(p);
     }
 
-    public void setTiempo(int tiempo) {
-        this.tiempo = tiempo;
+    public synchronized void bajarPasajeroBalsa(Pasajero p) {
+        pasajeros.remove(p);
     }
 
-    public List<Persona> getPersonasRescatadas() {
-        return personasRescatadas;
+    public synchronized List<Pasajero> getPasajeros() {
+        return new ArrayList<>(pasajeros);
     }
 
-    public boolean estaLlena() {
-        return personasRescatadas.size() >= capacidad;
-    }
-
-    public void agregarPersona(Persona persona) {
-        if (!estaLlena()) {
-            personasRescatadas.add(persona);
-        }
-    }
-
-    public void vaciarBalsa() {
-        personasRescatadas.clear();
+    public synchronized void vaciar() {
+        pasajeros.clear();
     }
 
     @Override
     public String toString() {
-        return " Balsa " + nombre + " (" + personasRescatadas.size() + "/" + capacidad + ")";
+        return "Balsa{" + nombre + " (" + pasajeros.size() + "/" + capacidad + ")}";
     }
 }
