@@ -13,9 +13,13 @@ public class Rescate extends Thread {
     public void run() {
         while (true) {
             // si no hay pasajeros, terminamos
-            if (!barco.hayPasajeros()) {
-                System.out.println(">>> La balsa " + balsa.getNombre() + " termina: no quedan pasajeros.");
-                return;
+            try {
+                if (!barco.hayPasajeros()) {
+                    System.out.println(">>> La balsa " + balsa.getNombre() + " termina: no quedan pasajeros.");
+                    return;
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
 
             boolean embarcoAlguien = embarcar();
@@ -27,11 +31,11 @@ public class Rescate extends Thread {
 
             navegandoATierra();
             desembarcar();
-            volviendoABarco();
+
         }
     }
 
-    private synchronized boolean embarcar() {
+    private boolean embarcar() {
         System.out.println("Embarcando en balsa " + balsa.getNombre());
         boolean subio = false;
 
@@ -67,13 +71,4 @@ public class Rescate extends Thread {
         System.out.println("------ Fin desembarque de " + balsa.getNombre() + " ------");
     }
 
-    private void volviendoABarco() {
-        System.out.println(balsa.getNombre() + " vuelve al barco...");
-        try {
-            Thread.sleep((long) balsa.getTiempo());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(balsa.getNombre() + " ve que quedan " + barco.getNumPasajeros() + " pasajeros.");
-    }
 }
