@@ -1,11 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class Balsa {
     private final String nombre;
     private final int capacidad;
     private final double tiempo; // en segundos
     private final List<Pasajero> pasajeros;
+    private final Semaphore semBalsa = new Semaphore(1);
 
     public Balsa(String nombre, int capacidad, double tiempo) {
         this.nombre = nombre;
@@ -26,24 +28,39 @@ public class Balsa {
         return tiempo * 1000; // convertir a ms para sleep
     }
 
-    public synchronized void subirPasajeroBalsa(Pasajero p) {
-        pasajeros.add(p);
+    public void subirPasajeroBalsa(Pasajero p) {
+        try {
+            semBalsa.acquire();
+            pasajeros.add(p);
+        } catch (InterruptedException ignored) {
+        } finally {
+            semBalsa.release();
+        }
     }
 
-    public synchronized void bajarPasajeroBalsa(Pasajero p) {
-        pasajeros.remove(p);
+
+    public void bajarPasajeroBalsa(Pasajero p) {
+        try {
+            semBalsa.acquire();
+            pasajeros.remove(p);
+        } catch (InterruptedException ignored) {
+        } finally {
+            semBalsa.release();
+        }
     }
 
-    public synchronized List<Pasajero> getPasajeros() {
-        return new ArrayList<>(pasajeros);
-    }
 
-    public synchronized void vaciar() {
-        pasajeros.clear();
-    }
+    public List<Pasajero> getPasajeros() {
+        try {
+            semBalsa.acquire();
+            return new ArrayList<>(pasajeros);
+        } catch (InterruptedException e) {
+            return new ArrayList<>();
+        } finally {
+            semBalsa.release();
 
-    @Override
-    public String toString() {
-        return "Balsa{" + nombre + " (" + pasajeros.size() + "/" + capacidad + ")}";
+        }
+
     }
 }
+
