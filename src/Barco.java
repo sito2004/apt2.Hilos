@@ -10,28 +10,45 @@ public class Barco {
     }
 
     public boolean hayPasajeros() throws InterruptedException {
-        semBarco.acquire();
-        return !pasajeros.isEmpty();
+        try {
+            semBarco.acquire();
+            return !pasajeros.isEmpty();
+        } catch (InterruptedException e) {
+            return false;
+        } finally {
+            semBarco.release();
+        }
     }
 
-    public  Pasajero sacarPrioritario() throws InterruptedException {
+public Pasajero sacarPrioritario() {
+    try {
         semBarco.acquire();
-        if (pasajeros.isEmpty()) {
+
+        if (pasajeros.isEmpty())
             return null;
-        }
 
-        Pasajero prioritario = pasajeros.get(0);
+        // PRIORIDAD: 1 es la más urgente
+        Pasajero mejor = pasajeros.get(0);
+
         for (Pasajero p : pasajeros) {
-            if (p.getPrioridad() < prioritario.getPrioridad()) {
-                prioritario = p;
+            if (p.getPrioridad() < mejor.getPrioridad()) {
+                mejor = p;
             }
+            if (mejor.getPrioridad() == 1)
+                break; // ya no puede haber mejor
         }
 
-        pasajeros.remove(prioritario);
-        return prioritario;
-    }
+        pasajeros.remove(mejor);
+        return mejor;
 
-    public  int getNumPasajeros() throws InterruptedException {
+    } catch (InterruptedException e) {
+        return null;
+    } finally {
+        semBarco.release();
+    }
+}
+
+    public int getNumPasajeros() throws InterruptedException {
         try {
             semBarco.acquire();
             return pasajeros.size();
