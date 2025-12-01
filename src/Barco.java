@@ -9,12 +9,12 @@ public class Barco {
         this.pasajeros = new ArrayList<>(pasajeros);
     }
 
-    public synchronized boolean hayPasajeros() throws InterruptedException {
+    public boolean hayPasajeros() throws InterruptedException {
         semBarco.acquire();
         return !pasajeros.isEmpty();
     }
 
-    public synchronized Pasajero sacarPrioritario() throws InterruptedException {
+    public  Pasajero sacarPrioritario() throws InterruptedException {
         semBarco.acquire();
         if (pasajeros.isEmpty()) {
             return null;
@@ -31,7 +31,7 @@ public class Barco {
         return prioritario;
     }
 
-    public synchronized int getNumPasajeros() throws InterruptedException {
+    public  int getNumPasajeros() throws InterruptedException {
         try {
             semBarco.acquire();
             return pasajeros.size();
